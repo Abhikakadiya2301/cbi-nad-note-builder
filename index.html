@@ -3,22 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NAD Visit Note Builder</title>
+<title>CBI Templates — Note Generators for CBI Operators</title>
+<meta name="description" content="CBI Templates: pick a note template — NAD (No Answer at Door) or Staff Book Off — and generate a standardized, copy-ready note.">
 <style>
   :root {
     --ink: #1c2b30;
     --ink-soft: #52666c;
     --line: #d7e0e1;
-    --line-soft: #e8eeee;
     --paper: #f4f8f8;
     --card: #ffffff;
-    --accent: #0e6e6b;
-    --accent-dark: #0a5250;
-    --accent-soft: #e2f0ef;
-    --amber: #b5762b;
-    --focus: #1a8f8b;
-    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    --nad: #0e6e6b;
+    --nad-soft: #e2f0ef;
+    --bookoff: #a15b1f;
+    --bookoff-soft: #f4e7da;
+    --returned: #3a5a8c;
+    --returned-soft: #e2e8f4;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   }
 
   * { box-sizing: border-box; }
@@ -30,9 +31,6 @@
     color: var(--ink);
     font-family: var(--sans);
     -webkit-font-smoothing: antialiased;
-  }
-
-  body {
     min-height: 100vh;
   }
 
@@ -41,318 +39,118 @@
     border-bottom: 1px solid var(--line);
     padding: 22px 28px;
     display: flex;
-    align-items: baseline;
-    gap: 14px;
-    position: sticky;
-    top: 0;
-    z-index: 20;
+    align-items: center;
+    gap: 10px;
   }
 
   header.app-header .mark {
     width: 10px;
     height: 10px;
     border-radius: 2px;
-    background: var(--accent);
+    background: var(--ink);
     flex-shrink: 0;
-    transform: translateY(-1px);
   }
 
   header.app-header h1 {
     font-size: 17px;
     font-weight: 700;
-    letter-spacing: 0.01em;
     margin: 0;
-  }
-
-  header.app-header .sub {
-    font-size: 12.5px;
-    color: var(--ink-soft);
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
   }
 
   main {
-    max-width: 1240px;
+    max-width: 880px;
     margin: 0 auto;
-    padding: 28px;
+    padding: 56px 28px 40px;
+  }
+
+  main > p.lede {
+    font-size: 15px;
+    color: var(--ink-soft);
+    max-width: 56ch;
+    margin: 0 0 34px;
+    line-height: 1.55;
+  }
+
+  .template-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
-    gap: 24px;
-    align-items: start;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
   }
 
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  section.card {
+  a.template-card {
+    display: block;
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 20px 22px 22px;
-    position: relative;
-    border-left: 3px solid var(--accent);
+    border-radius: 12px;
+    padding: 24px 22px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
   }
 
-  .eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
+  a.template-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(28, 43, 48, 0.08);
   }
 
-  .eyebrow .num {
+  a.template-card:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  .template-card .eyebrow {
     font-family: var(--mono);
     font-size: 11px;
     font-weight: 700;
-    color: var(--accent);
-    background: var(--accent-soft);
-    border-radius: 4px;
-    padding: 3px 7px;
-    letter-spacing: 0.03em;
-  }
-
-  .eyebrow h2 {
-    font-size: 14.5px;
-    font-weight: 700;
-    margin: 0;
-    letter-spacing: 0.01em;
-  }
-
-  .field-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 14px 16px;
-  }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    min-width: 0;
-  }
-
-  .field.full {
-    grid-column: 1 / -1;
-  }
-
-  .field label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ink-soft);
-    letter-spacing: 0.01em;
-  }
-
-  .field .hint {
-    font-weight: 400;
-    color: #8fa0a3;
-    text-transform: none;
-  }
-
-  input[type="text"],
-  input[type="date"],
-  select,
-  textarea {
-    font-family: var(--sans);
-    font-size: 14px;
-    color: var(--ink);
-    background: #fbfdfd;
-    border: 1px solid var(--line);
-    border-radius: 7px;
-    padding: 9px 10px;
-    width: 100%;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-  }
-
-  textarea {
-    resize: vertical;
-    min-height: 64px;
-    line-height: 1.45;
-  }
-
-  input:hover, select:hover, textarea:hover {
-    border-color: #b7c6c7;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--focus);
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(26, 143, 139, 0.14);
-  }
-
-  select {
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2352666c'><path fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z' clip-rule='evenodd'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
-    padding-right: 30px;
-    cursor: pointer;
-  }
-
-  .contact-pair {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 16px;
-  }
-
-  .contact-block {
-    background: var(--paper);
-    border: 1px dashed var(--line);
-    border-radius: 8px;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .contact-block .contact-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--accent-dark);
-    text-transform: uppercase;
     letter-spacing: 0.04em;
+    border-radius: 4px;
+    padding: 3px 8px;
+    display: inline-block;
+    margin-bottom: 14px;
   }
 
-  /* Output panel */
-  .output-col {
-    position: sticky;
-    top: 92px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+  a.card-nad { border-left: 3px solid var(--nad); }
+  a.card-nad .eyebrow { background: var(--nad-soft); color: var(--nad); }
+
+  a.card-bookoff { border-left: 3px solid var(--bookoff); }
+  a.card-bookoff .eyebrow { background: var(--bookoff-soft); color: var(--bookoff); }
+
+  a.card-returned { border-left: 3px solid var(--returned); }
+  a.card-returned .eyebrow { background: var(--returned-soft); color: var(--returned); }
+
+  .template-card h2 {
+    font-size: 16.5px;
+    font-weight: 700;
+    margin: 0 0 8px;
   }
 
-  .output-panel {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 20px 20px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .output-panel .eyebrow h2 { font-size: 14.5px; }
-
-  #noteOutput {
-    width: 100%;
-    min-height: 460px;
-    max-height: 640px;
-    font-family: var(--mono);
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: var(--ink);
-    background: #0f2323;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 14px;
-    white-space: pre-wrap;
-    resize: vertical;
-  }
-
-  #noteOutput:focus {
-    outline: none;
-    border-color: var(--focus);
-    box-shadow: 0 0 0 3px rgba(26, 143, 139, 0.14);
-  }
-
-  .btn-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  button {
-    font-family: var(--sans);
-    font-size: 13.5px;
-    font-weight: 600;
-    border-radius: 7px;
-    padding: 10px 16px;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
-    flex: 1;
-  }
-
-  button:active { transform: translateY(1px); }
-
-  .btn-primary {
-    background: var(--accent);
-    color: #ffffff;
-  }
-
-  .btn-primary:hover { background: var(--accent-dark); }
-
-  .btn-secondary {
-    background: #ffffff;
-    color: var(--accent-dark);
-    border-color: var(--accent);
-  }
-
-  .btn-secondary:hover { background: var(--accent-soft); }
-
-  button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 1px;
-  }
-
-  .copy-feedback {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--accent-dark);
-    background: var(--accent-soft);
-    border: 1px solid var(--accent);
-    border-radius: 6px;
-    padding: 8px 10px;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(-4px);
-    transition: opacity 0.18s ease, transform 0.18s ease;
-    pointer-events: none;
-  }
-
-  .copy-feedback.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .status-note {
-    font-size: 11.5px;
+  .template-card p {
+    font-size: 13px;
     color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 0 0 16px;
   }
+
+  .template-card .go {
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  a.card-nad .go { color: var(--nad); }
+  a.card-bookoff .go { color: var(--bookoff); }
 
   footer {
-    max-width: 1240px;
+    max-width: 880px;
     margin: 0 auto;
     padding: 4px 28px 32px;
     font-size: 11.5px;
     color: #8fa0a3;
   }
 
-  @media (max-width: 920px) {
-    main {
-      grid-template-columns: 1fr;
-      padding: 18px;
-      gap: 18px;
-    }
-    .output-col {
-      position: static;
-    }
-    header.app-header {
-      padding: 16px 18px;
-    }
-    #noteOutput {
-      min-height: 320px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    * { transition: none !important; }
+  @media (max-width: 600px) {
+    main { padding: 36px 18px 30px; }
+    header.app-header { padding: 16px 18px; }
   }
 </style>
 </head>
@@ -360,344 +158,37 @@
 
 <header class="app-header">
   <span class="mark" aria-hidden="true"></span>
-  <div>
-    <h1>NAD Visit Note Builder</h1>
-    <div class="sub">No Answer at Door — structured documentation</div>
-  </div>
+  <h1>CBI Templates</h1>
 </header>
 
 <main>
-  <form id="nadForm" autocomplete="off">
+  <p class="lede">Pick a template to fill in the details and generate a standardized, copy-ready note.</p>
 
-    <section class="card">
-      <div class="eyebrow"><span class="num">01</span><h2>Visit Details</h2></div>
-      <div class="field-grid">
-        <div class="field">
-          <label for="visitDate">Date</label>
-          <input type="date" id="visitDate" name="visitDate">
-        </div>
-        <div class="field">
-          <label for="visitTime">Time <span class="hint">(Start–End)</span></label>
-          <input type="text" id="visitTime" name="visitTime" placeholder="Start–End">
-        </div>
-        <div class="field">
-          <label for="priority">Priority</label>
-          <select id="priority" name="priority">
-            <option value="">Select…</option>
-            <option>P1</option>
-            <option>P2</option>
-            <option>P3</option>
-            <option>ESS</option>
-            <option>LPN</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="staffName">Staff Name</label>
-          <input type="text" id="staffName" name="staffName" placeholder="Full name">
-        </div>
-      </div>
-    </section>
+  <div class="template-grid">
+    <a class="template-card card-nad" href="CBI-NAD-TEMPLATE-BUILDER.html">
+      <span class="eyebrow">NAD</span>
+      <h2>NAD Visit Note</h2>
+      <p>No Answer at Door — visit details, steps completed, client and emergency contact attempts, and ALA notification.</p>
+      <span class="go">Open template &rarr;</span>
+    </a>
 
-    <section class="card">
-      <div class="eyebrow"><span class="num">02</span><h2>NAD Steps Completed</h2></div>
-      <div class="field-grid">
-        <div class="field">
-          <label for="nadReported">Staff reported NAD</label>
-          <select id="nadReported" name="nadReported">
-            <option value="">Select…</option>
-            <option>Yes</option>
-            <option>No</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="addressVerified">Address verified with staff</label>
-          <select id="addressVerified" name="addressVerified">
-            <option value="">Select…</option>
-            <option>Yes</option>
-            <option>No</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="entryInstructions">Entry instructions followed</label>
-          <select id="entryInstructions" name="entryInstructions">
-            <option value="">Select…</option>
-            <option>Yes</option>
-            <option>No</option>
-            <option>N/A</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="waited15">Staff waited 15 minutes</label>
-          <select id="waited15" name="waited15">
-            <option value="">Select…</option>
-            <option>Yes</option>
-            <option>No</option>
-            <option>Unable to confirm</option>
-          </select>
-        </div>
-        <div class="field full">
-          <label for="stepsNotes">Steps Description / Notes</label>
-          <textarea id="stepsNotes" name="stepsNotes" placeholder="Describe what staff did at the door…"></textarea>
-        </div>
-      </div>
-    </section>
+    <a class="template-card card-bookoff" href="book-off-template.html">
+      <span class="eyebrow">BOOK OFF</span>
+      <h2>Staff Book Off</h2>
+      <p>Partial day or full day book off — visits affected, hours returned, reason keyword, and description.</p>
+      <span class="go">Open template &rarr;</span>
+    </a>
 
-    <section class="card">
-      <div class="eyebrow"><span class="num">03</span><h2>Client Contact Attempt</h2></div>
-      <div class="field-grid">
-        <div class="field">
-          <label for="clientCalled">Client Called</label>
-          <select id="clientCalled" name="clientCalled">
-            <option value="">Select…</option>
-            <option>Yes</option>
-            <option>No</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="clientOutcome">Outcome</label>
-          <select id="clientOutcome" name="clientOutcome">
-            <option value="">Select…</option>
-            <option>Answered</option>
-            <option>No answer</option>
-            <option>VM left</option>
-            <option>Unable to leave VM</option>
-          </select>
-        </div>
-        <div class="field full">
-          <label for="clientOutcomeDesc">Outcome Description</label>
-          <textarea id="clientOutcomeDesc" name="clientOutcomeDesc" placeholder="Details of the call attempt…"></textarea>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="eyebrow"><span class="num">04</span><h2>Emergency Contacts Called</h2></div>
-      <div class="contact-pair">
-        <div class="contact-block">
-          <div class="contact-title">Contact 1</div>
-          <div class="field">
-            <label for="c1Name">Name / Relationship</label>
-            <input type="text" id="c1Name" name="c1Name" placeholder="e.g. Jane Smith – Daughter">
-          </div>
-          <div class="field">
-            <label for="c1Outcome">Outcome</label>
-            <select id="c1Outcome" name="c1Outcome">
-              <option value="">Select…</option>
-              <option>Answered</option>
-              <option>No answer</option>
-              <option>VM left</option>
-              <option>Unable to leave VM</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="c1Desc">Description</label>
-            <input type="text" id="c1Desc" name="c1Desc" placeholder="Brief note">
-          </div>
-        </div>
-        <div class="contact-block">
-          <div class="contact-title">Contact 2</div>
-          <div class="field">
-            <label for="c2Name">Name / Relationship</label>
-            <input type="text" id="c2Name" name="c2Name" placeholder="e.g. John Smith – Son">
-          </div>
-          <div class="field">
-            <label for="c2Outcome">Outcome</label>
-            <select id="c2Outcome" name="c2Outcome">
-              <option value="">Select…</option>
-              <option>Answered</option>
-              <option>No answer</option>
-              <option>VM left</option>
-              <option>Unable to leave VM</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="c2Desc">Description</label>
-            <input type="text" id="c2Desc" name="c2Desc" placeholder="Brief note">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="eyebrow"><span class="num">05</span><h2>ALA Notification</h2></div>
-      <div class="field-grid">
-        <div class="field">
-          <label for="alaNotified">ALA Notified</label>
-          <select id="alaNotified" name="alaNotified">
-            <option value="">Select…</option>
-            <option>Yes</option>
-            <option>No</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="alaOffice">Office / Site Name</label>
-          <input type="text" id="alaOffice" name="alaOffice" placeholder="Office or site name">
-        </div>
-        <div class="field">
-          <label for="alaMethod">Method</label>
-          <select id="alaMethod" name="alaMethod">
-            <option value="">Select…</option>
-            <option>Call</option>
-            <option>VM left</option>
-            <option>Fax</option>
-            <option>N/A</option>
-          </select>
-        </div>
-      </div>
-    </section>
-
-  </form>
-
-  <div class="output-col">
-    <div class="output-panel">
-      <div class="eyebrow"><span class="num">OUT</span><h2>Generated Note</h2></div>
-      <textarea id="noteOutput" readonly aria-label="Generated NAD note"></textarea>
-      <div class="btn-row">
-        <button type="button" id="generateBtn" class="btn-primary">Generate Note</button>
-        <button type="button" id="copyBtn" class="btn-secondary">Copy to Clipboard</button>
-      </div>
-      <div id="copyFeedback" class="copy-feedback" role="status" aria-live="polite">Copied to clipboard!</div>
-      <div class="status-note">Updates live as you fill in the form. Blank fields show as "—".</div>
-    </div>
+    <a class="template-card card-returned" href="returned-visits-book-off.html">
+      <span class="eyebrow">RETURNED VISITS</span>
+      <h2>Returned Visits Book Off</h2>
+      <p>Visits returned due to a staff book off — visits, hours, reason keyword, affected client(s), and description.</p>
+      <span class="go">Open template &rarr;</span>
+    </a>
   </div>
 </main>
 
-<footer>NAD Visit Note Builder — data stays in your browser; nothing is transmitted or stored.</footer>
-
-<script>
-(function () {
-  "use strict";
-
-  const form = document.getElementById("nadForm");
-  const output = document.getElementById("noteOutput");
-  const generateBtn = document.getElementById("generateBtn");
-  const copyBtn = document.getElementById("copyBtn");
-  const copyFeedback = document.getElementById("copyFeedback");
-
-  const dash = "—";
-
-  function val(id) {
-    const el = document.getElementById(id);
-    if (!el) return "";
-    return el.value.trim();
-  }
-
-  function orDash(s) {
-    return s && s.length ? s : dash;
-  }
-
-  function formatDate(raw) {
-    if (!raw) return dash;
-    // raw is YYYY-MM-DD from <input type="date">
-    const parts = raw.split("-");
-    if (parts.length !== 3) return raw;
-    const [y, m, d] = parts;
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const mi = parseInt(m, 10) - 1;
-    if (mi < 0 || mi > 11) return raw;
-    return `${months[mi]} ${parseInt(d, 10)}, ${y}`;
-  }
-
-  function formatContact(name, outcome, desc) {
-    const hasAny = name || outcome || desc;
-    if (!hasAny) return `${dash} – ${dash} - ${dash}`;
-    return `${orDash(name)} – ${orDash(outcome)} - ${orDash(desc)}`;
-  }
-
-  function generateNote() {
-    const date = formatDate(val("visitDate"));
-    const time = orDash(val("visitTime"));
-    const priority = orDash(val("priority"));
-    const staffName = orDash(val("staffName"));
-
-    const nadReported = orDash(val("nadReported"));
-    const addressVerified = orDash(val("addressVerified"));
-    const entryInstructions = orDash(val("entryInstructions"));
-    const waited15 = orDash(val("waited15"));
-    const stepsNotes = orDash(val("stepsNotes"));
-
-    const clientCalled = orDash(val("clientCalled"));
-    const clientOutcome = orDash(val("clientOutcome"));
-    const clientOutcomeDesc = orDash(val("clientOutcomeDesc"));
-
-    const c1 = formatContact(val("c1Name"), val("c1Outcome"), val("c1Desc"));
-    const c2 = formatContact(val("c2Name"), val("c2Outcome"), val("c2Desc"));
-
-    const alaNotified = orDash(val("alaNotified"));
-    const alaOffice = orDash(val("alaOffice"));
-    const alaMethod = orDash(val("alaMethod"));
-
-    const lines = [
-      "Title - NAD",
-      `Visit Details: Date: ${date} | Time: ${time} | Priority: ${priority}`,
-      `Staff Name: ${staffName}`,
-      `NAD Steps Completed: Staff reported NAD: ${nadReported} Address verified with staff: ${addressVerified} Entry instructions followed, if applicable: ${entryInstructions} Staff waited 15 minutes: ${waited15} - ${stepsNotes}`,
-      `Client Contact Attempt: Client called: ${clientCalled} Outcome: ${clientOutcome} - ${clientOutcomeDesc}`,
-      "Contacts Called:",
-      `1. ${c1}`,
-      `2. ${c2}`,
-      `ALA Notification: ALA notified: ${alaNotified} | ALA office/site notified: ${alaOffice} Method: ${alaMethod}`
-    ];
-
-    output.value = lines.join("\n");
-  }
-
-  function copyToClipboard() {
-    if (!output.value) {
-      generateNote();
-    }
-    const text = output.value;
-
-    function showFeedback() {
-      copyFeedback.classList.add("show");
-      clearTimeout(showFeedback._t);
-      showFeedback._t = setTimeout(() => {
-        copyFeedback.classList.remove("show");
-      }, 2200);
-    }
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(showFeedback).catch(() => {
-        fallbackCopy(text, showFeedback);
-      });
-    } else {
-      fallbackCopy(text, showFeedback);
-    }
-  }
-
-  function fallbackCopy(text, cb) {
-    output.removeAttribute("readonly");
-    output.focus();
-    output.select();
-    try {
-      document.execCommand("copy");
-      cb();
-    } catch (e) {
-      /* no-op: clipboard unavailable */
-    } finally {
-      output.setAttribute("readonly", "true");
-    }
-  }
-
-  // Default date to today
-  const dateInput = document.getElementById("visitDate");
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
-  dateInput.value = `${yyyy}-${mm}-${dd}`;
-
-  // Live updates on any form change/input
-  form.addEventListener("input", generateNote);
-  form.addEventListener("change", generateNote);
-
-  generateBtn.addEventListener("click", generateNote);
-  copyBtn.addEventListener("click", copyToClipboard);
-
-  // Initial render
-  generateNote();
-})();
-</script>
+<footer>CBI Templates — data stays in your browser; nothing is transmitted or stored.</footer>
 
 </body>
 </html>
