@@ -226,10 +226,21 @@
     gap: 14px;
   }
 
+  .textarea-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .textarea-group label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+
   #noteOutput {
     width: 100%;
-    min-height: 360px;
-    max-height: 580px;
+    min-height: 220px;
     font-family: var(--mono);
     font-size: 12.5px;
     line-height: 1.6;
@@ -242,7 +253,21 @@
     resize: vertical;
   }
 
-  #noteOutput:focus {
+  #teamsOutput {
+    width: 100%;
+    min-height: 70px;
+    font-family: var(--sans);
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    background: #eef2f9; /* Slight blue tint */
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px;
+    resize: vertical;
+  }
+
+  #noteOutput:focus, #teamsOutput:focus {
     outline: none;
     border-color: var(--focus);
     box-shadow: 0 0 0 3px rgba(77, 110, 163, 0.16);
@@ -264,6 +289,7 @@
     cursor: pointer;
     transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
     flex: 1;
+    white-space: nowrap;
   }
 
   button:active { transform: translateY(1px); }
@@ -296,11 +322,12 @@
     transform: translateY(-4px);
     transition: opacity 0.18s ease, transform 0.18s ease;
     pointer-events: none;
+    margin-top: 4px;
   }
 
   .copy-feedback.show { opacity: 1; transform: translateY(0); }
 
-  .status-note { font-size: 11.5px; color: var(--ink-soft); }
+  .status-note { font-size: 11.5px; color: var(--ink-soft); margin-top: -6px; }
 
   footer {
     max-width: 1160px;
@@ -314,7 +341,6 @@
     main { grid-template-columns: 1fr; padding: 18px; gap: 18px; }
     .output-col { position: static; }
     header.app-header { padding: 16px 18px; flex-wrap: wrap; }
-    #noteOutput { min-height: 280px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -424,12 +450,23 @@
 
   <div class="output-col">
     <div class="output-panel">
-      <div class="eyebrow"><span class="num">OUT</span><h2>Generated Note</h2></div>
-      <textarea id="noteOutput" readonly aria-label="Generated Returned Visits Book Off note"></textarea>
-      <div class="btn-row">
-        <button type="button" id="generateBtn" class="btn-primary">Generate Note</button>
-        <button type="button" id="copyBtn" class="btn-secondary">Copy to Clipboard</button>
+      <div class="eyebrow"><span class="num">OUT</span><h2>Generated Note & Message</h2></div>
+      
+      <div class="textarea-group">
+        <label>System Note</label>
+        <textarea id="noteOutput" readonly aria-label="Generated Returned Visits Book Off note"></textarea>
       </div>
+
+      <div class="textarea-group" style="margin-top: 8px;">
+        <label>Teams Message</label>
+        <textarea id="teamsOutput" readonly aria-label="Generated Teams Message"></textarea>
+      </div>
+
+      <div class="btn-row" style="margin-top: 8px;">
+        <button type="button" id="copyNoteBtn" class="btn-primary">Copy Note</button>
+        <button type="button" id="copyTeamsBtn" class="btn-secondary">Copy Teams Msg</button>
+      </div>
+      
       <div id="copyFeedback" class="copy-feedback" role="status" aria-live="polite">Copied to clipboard!</div>
       <div class="status-note">Updates live as you fill in the form. Blank fields show as "—".</div>
     </div>
@@ -443,9 +480,10 @@
   "use strict";
 
   const form = document.getElementById("returnedVisitsForm");
-  const output = document.getElementById("noteOutput");
-  const generateBtn = document.getElementById("generateBtn");
-  const copyBtn = document.getElementById("copyBtn");
+  const noteOutput = document.getElementById("noteOutput");
+  const teamsOutput = document.getElementById("teamsOutput");
+  const copyNoteBtn = document.getElementById("copyNoteBtn");
+  const copyTeamsBtn = document.getElementById("copyTeamsBtn");
   const copyFeedback = document.getElementById("copyFeedback");
 
   const dash = "—";
@@ -477,9 +515,20 @@
     const mm = m || "00";
     return `${hh}h ${mm}m`;
   }
+  
+  function isToday(rawDateString) {
+    if (!rawDateString) return false;
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+    return rawDateString === todayStr;
+  }
 
-  function generateNote() {
-    const date = formatDate(val("visitDate"));
+  function generateContent() {
+    const rawDate = val("visitDate");
+    const date = formatDate(rawDate);
     const staffName = orDash(val("staffName"));
     const numVisits = orDash(val("numVisits"));
     const hoursReturned = formatHours(val("hoursReturned"), val("minutesReturned"));
@@ -487,7 +536,8 @@
     const clients = orDash(val("clients"));
     const description = orDash(val("description"));
 
-    const lines = [
+    // 1. Generate System Note
+    const noteLines = [
       "Title - Returned Visits Book Off",
       `Date: ${date} | Staff Name: ${staffName}`,
       `Number of visits returned: ${numVisits}`,
@@ -496,13 +546,21 @@
       `Client(s): ${clients}`,
       `Description: ${description}`
     ];
+    noteOutput.value = noteLines.join("\n");
 
-    output.value = lines.join("\n");
+    // 2. Generate Teams Message
+    const teamsDateText = isToday(rawDate) ? "today" : (date !== dash ? date : "[date]");
+    const tStaff = staffName !== dash ? staffName : "[Name of staff]";
+    const tClient = clients !== dash ? clients : "[client name]";
+    const tKeyword = keyword !== dash ? keyword : "[keyword]";
+    const tVisits = numVisits !== dash ? `${numVisits}` : "[number of]";
+
+    teamsOutput.value = `Staff ${tStaff} returned visit for ${tClient} ${teamsDateText}, ${tKeyword}. ${tVisits} back to planner.`;
   }
 
-  function copyToClipboard() {
-    if (!output.value) generateNote();
-    const text = output.value;
+  function copyText(targetElement) {
+    if (!targetElement.value) generateContent();
+    const text = targetElement.value;
 
     function showFeedback() {
       copyFeedback.classList.add("show");
@@ -514,24 +572,24 @@
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(showFeedback).catch(() => {
-        fallbackCopy(text, showFeedback);
+        fallbackCopy(targetElement, showFeedback);
       });
     } else {
-      fallbackCopy(text, showFeedback);
+      fallbackCopy(targetElement, showFeedback);
     }
   }
 
-  function fallbackCopy(text, cb) {
-    output.removeAttribute("readonly");
-    output.focus();
-    output.select();
+  function fallbackCopy(targetElement, cb) {
+    targetElement.removeAttribute("readonly");
+    targetElement.focus();
+    targetElement.select();
     try {
       document.execCommand("copy");
       cb();
     } catch (e) {
       /* no-op */
     } finally {
-      output.setAttribute("readonly", "true");
+      targetElement.setAttribute("readonly", "true");
     }
   }
 
@@ -542,12 +600,12 @@
   const dd = String(today.getDate()).padStart(2, "0");
   dateInput.value = `${yyyy}-${mm}-${dd}`;
 
-  form.addEventListener("input", generateNote);
-  form.addEventListener("change", generateNote);
-  generateBtn.addEventListener("click", generateNote);
-  copyBtn.addEventListener("click", copyToClipboard);
+  form.addEventListener("input", generateContent);
+  form.addEventListener("change", generateContent);
+  copyNoteBtn.addEventListener("click", () => copyText(noteOutput));
+  copyTeamsBtn.addEventListener("click", () => copyText(teamsOutput));
 
-  generateNote();
+  generateContent();
 })();
 </script>
 
