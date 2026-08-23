@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBI NAD Template Builder</title>
+<link rel="stylesheet" href="assets/css/global.css">
+<style>
+  :root {
+    --accent: var(--nad);
+    --accent-dark: var(--nad-soft);
+    --accent-soft: var(--nad-soft);
+    --focus: var(--nad);
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <span class="mark" aria-hidden="true"></span>
+  <div>
+    <h1>NAD Template Builder</h1>
+    <div class="sub">No Answer at Door Note Generator</div>
+  </div>
+  <a class="back" href="index.html">&larr; All templates</a>
+</header>
+
+<main>
+  <form id="nadForm" autocomplete="off">
+    <!-- 01: Visit Details -->
+    <section class="card">
+      <div class="eyebrow"><span class="num">01</span><h2>Visit Details</h2></div>
+      <div class="field-grid">
+        <div class="field"><label for="visitDate">Date</label><input type="date" id="visitDate"></div>
+        <div class="field">
+          <label>Time (Start &ndash; End)</label>
+          <div class="hours-row">
+            <input type="time" id="timeStart">
+            <input type="time" id="timeEnd">
+          </div>
+        </div>
+        <div class="field">
+          <label for="priority">Priority</label>
+          <select id="priority">
+            <option value=""></option>
+            <option value="P1">P1</option>
+            <option value="P2">P2</option>
+            <option value="P3">P3</option>
+            <option value="ESS">ESS</option>
+            <option value="LPN">LPN</option>
+          </select>
+        </div>
+        <div class="field"><label for="staffName">Staff Name</label><input type="text" id="staffName"></div>
+      </div>
+    </section>
+
+    <!-- 02: NAD Steps -->
+    <section class="card">
+      <div class="eyebrow"><span class="num">02</span><h2>NAD Steps Completed</h2></div>
+      <div class="field-grid dense">
+        <div class="field">
+          <label for="staffReported">Staff reported NAD</label>
+          <select id="staffReported"><option value=""></option><option value="Yes">Yes</option><option value="No">No</option></select>
+        </div>
+        <div class="field">
+          <label for="addressVerified">Address verified</label>
+          <select id="addressVerified"><option value=""></option><option value="Yes">Yes</option><option value="No">No</option></select>
+        </div>
+        <div class="field">
+          <label for="entryInstructions">Entry instructions followed</label>
+          <select id="entryInstructions"><option value=""></option><option value="Yes">Yes</option><option value="No">No</option><option value="N/A">N/A</option></select>
+        </div>
+        <div class="field">
+          <label for="waited15">Staff waited 15 mins</label>
+          <select id="waited15"><option value=""></option><option value="Yes">Yes</option><option value="No">No</option><option value="Unable to confirm">Unable to confirm</option></select>
+        </div>
+        <div class="field full"><label for="nadDesc">Description</label><input type="text" id="nadDesc" placeholder="Additional details..."></div>
+      </div>
+    </section>
+
+    <!-- 03: Client Contact -->
+    <section class="card">
+      <div class="eyebrow"><span class="num">03</span><h2>Client Contact Attempt</h2></div>
+      <div class="field-grid">
+        <div class="field">
+          <label for="clientCalled">Client called</label>
+          <select id="clientCalled"><option value=""></option><option value="Yes">Yes</option><option value="No">No</option></select>
+        </div>
+        <div class="field">
+          <label for="clientOutcome">Outcome</label>
+          <select id="clientOutcome">
+            <option value=""></option>
+            <option value="Answered">Answered</option>
+            <option value="No answer">No answer</option>
+            <option value="VM left">VM left</option>
+            <option value="Unable to leave VM">Unable to leave VM</option>
+          </select>
+        </div>
+        <div class="field full"><label for="clientDesc">Description</label><input type="text" id="clientDesc" placeholder="Notes on client call..."></div>
+      </div>
+    </section>
+
+    <!-- 04: Contacts Called -->
+    <section class="card">
+      <div class="eyebrow"><span class="num">04</span><h2>Contacts Called</h2></div>
+      <div class="field-grid">
+        <div class="field full"><label>Contact 1</label></div>
+        <div class="field"><input type="text" id="c1Name" placeholder="Name/Relationship"></div>
+        <div class="field">
+          <select id="c1Outcome">
+            <option value=""></option>
+            <option value="Answered">Answered</option>
+            <option value="No answer">No answer</option>
+            <option value="VM left">VM left</option>
+            <option value="Unable to leave VM">Unable to leave VM</option>
+          </select>
+        </div>
+        <div class="field full"><input type="text" id="c1Desc" placeholder="Description"></div>
+
+        <div class="field full" style="margin-top: 8px;"><label>Contact 2</label></div>
+        <div class="field"><input type="text" id="c2Name" placeholder="Name/Relationship"></div>
+        <div class="field">
+          <select id="c2Outcome">
+            <option value=""></option>
+            <option value="Answered">Answered</option>
+            <option value="No answer">No answer</option>
+            <option value="VM left">VM left</option>
+            <option value="Unable to leave VM">Unable to leave VM</option>
+          </select>
+        </div>
+        <div class="field full"><input type="text" id="c2Desc" placeholder="Description"></div>
+      </div>
+    </section>
+
+    <!-- 05: ALA Notification -->
+    <section class="card">
+      <div class="eyebrow"><span class="num">05</span><h2>ALA Notification</h2></div>
+      <div class="field-grid">
+        <div class="field">
+          <label for="alaNotified">ALA notified</label>
+          <select id="alaNotified"><option value=""></option><option value="Yes">Yes</option><option value="No">No</option></select>
+        </div>
+        <div class="field">
+          <label for="alaOffice">ALA office/site notified</label>
+          <input type="text" id="alaOffice" placeholder="Office/Site Name / N/A">
+        </div>
+        <div class="field">
+          <label for="alaMethod">Method</label>
+          <select id="alaMethod">
+            <option value=""></option>
+            <option value="Call">Call</option>
+            <option value="VM left">VM left</option>
+            <option value="Fax">Fax</option>
+            <option value="N/A">N/A</option>
+          </select>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <!-- Output Engine -->
+  <div class="output-col">
+    <div class="output-panel">
+      <div class="eyebrow"><span class="num">OUT</span><h2>Generated Notes</h2></div>
+      <div class="textarea-group">
+        <label for="noteOutput">Procura Note</label>
+        <textarea id="noteOutput" readonly style="min-height: 400px;"></textarea>
+      </div>
+      <div class="textarea-group">
+        <label for="teamsOutput">Teams Message</label>
+        <textarea id="teamsOutput" readonly></textarea>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn-primary" id="copyNoteBtn">Copy Note</button>
+        <button type="button" class="btn-secondary" id="copyTeamsBtn">Copy Teams MSG</button>
+      </div>
+      <div id="copyFeedback" class="copy-feedback">Copied to clipboard!</div>
+    </div>
+  </div>
+</main>
+<footer>CBI NAD Template Builder — data stays in your browser.</footer>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/templates.js"></script>
+</body>
+</html>

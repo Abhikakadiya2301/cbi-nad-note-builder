@@ -3,348 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CBI Returned Visits Book Off Template Builder</title>
-<meta name="description" content="CBI Returned Visits Book Off Template Builder: generate a standardized, copy-ready note for visits returned due to a staff book off.">
+<title>CBI Returned Visits Book Off Template</title>
+<link rel="stylesheet" href="assets/css/global.css">
 <style>
   :root {
-    --ink: #1c2b30;
-    --ink-soft: #52666c;
-    --line: #d7e0e1;
-    --paper: #f4f8f8;
-    --card: #ffffff;
-    --accent: #3a5a8c;
-    --accent-dark: #2c4570;
-    --accent-soft: #e2e8f4;
-    --focus: #4d6ea3;
-    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
-
-  * { box-sizing: border-box; }
-
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--sans);
-    -webkit-font-smoothing: antialiased;
-  }
-
-  body { min-height: 100vh; }
-
-  header.app-header {
-    background: var(--card);
-    border-bottom: 1px solid var(--line);
-    padding: 22px 28px;
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    position: sticky;
-    top: 0;
-    z-index: 20;
-  }
-
-  header.app-header .mark {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    background: var(--accent);
-    flex-shrink: 0;
-    transform: translateY(-1px);
-  }
-
-  header.app-header h1 {
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    margin: 0;
-  }
-
-  header.app-header .sub {
-    font-size: 12.5px;
-    color: var(--ink-soft);
-    letter-spacing: 0.02em;
-  }
-
-  header.app-header a.back {
-    margin-left: auto;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--accent-dark);
-    text-decoration: none;
-    border: 1px solid var(--line);
-    padding: 7px 12px;
-    border-radius: 7px;
-    white-space: nowrap;
-  }
-
-  header.app-header a.back:hover {
-    background: var(--accent-soft);
-    border-color: var(--accent);
-  }
-
-  main {
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 28px;
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
-    gap: 24px;
-    align-items: start;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  section.card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 20px 22px 22px;
-    border-left: 3px solid var(--accent);
-  }
-
-  .eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .eyebrow .num {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--accent-dark);
-    background: var(--accent-soft);
-    border-radius: 4px;
-    padding: 3px 7px;
-    letter-spacing: 0.03em;
-  }
-
-  .eyebrow h2 {
-    font-size: 14.5px;
-    font-weight: 700;
-    margin: 0;
-    letter-spacing: 0.01em;
-  }
-
-  .field-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 14px 16px;
-  }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    min-width: 0;
-  }
-
-  .field.full { grid-column: 1 / -1; }
-
-  .field label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ink-soft);
-    letter-spacing: 0.01em;
-  }
-
-  .field .hint {
-    font-weight: 400;
-    color: #8fa0a3;
-  }
-
-  .hours-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  input[type="text"],
-  input[type="number"],
-  input[type="date"],
-  select,
-  textarea {
-    font-family: var(--sans);
-    font-size: 14px;
-    color: var(--ink);
-    background: #fbfdfd;
-    border: 1px solid var(--line);
-    border-radius: 7px;
-    padding: 9px 10px;
-    width: 100%;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-  }
-
-  textarea {
-    resize: vertical;
-    min-height: 90px;
-    line-height: 1.45;
-  }
-
-  input:hover, select:hover, textarea:hover { border-color: #b6c3d6; }
-
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--focus);
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(77, 110, 163, 0.16);
-  }
-
-  select {
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2352666c'><path fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z' clip-rule='evenodd'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
-    padding-right: 30px;
-    cursor: pointer;
-  }
-
-  .output-col {
-    position: sticky;
-    top: 92px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .output-panel {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 20px 20px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .textarea-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .textarea-group label {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--ink-soft);
-  }
-
-  #noteOutput {
-    width: 100%;
-    min-height: 220px;
-    font-family: var(--mono);
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: var(--ink);
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 14px;
-    white-space: pre-wrap;
-    resize: vertical;
-  }
-
-  #teamsOutput {
-    width: 100%;
-    min-height: 70px;
-    font-family: var(--sans);
-    font-size: 13.5px;
-    line-height: 1.5;
-    color: var(--ink);
-    background: #eef2f9; /* Slight blue tint */
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 14px;
-    resize: vertical;
-  }
-
-  #noteOutput:focus, #teamsOutput:focus {
-    outline: none;
-    border-color: var(--focus);
-    box-shadow: 0 0 0 3px rgba(77, 110, 163, 0.16);
-  }
-
-  .btn-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  button {
-    font-family: var(--sans);
-    font-size: 13.5px;
-    font-weight: 600;
-    border-radius: 7px;
-    padding: 10px 16px;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
-    flex: 1;
-    white-space: nowrap;
-  }
-
-  button:active { transform: translateY(1px); }
-
-  .btn-primary { background: var(--accent); color: #ffffff; }
-  .btn-primary:hover { background: var(--accent-dark); }
-
-  .btn-secondary {
-    background: #ffffff;
-    color: var(--accent-dark);
-    border-color: var(--accent);
-  }
-  .btn-secondary:hover { background: var(--accent-soft); }
-
-  button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 1px;
-  }
-
-  .copy-feedback {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--accent-dark);
-    background: var(--accent-soft);
-    border: 1px solid var(--accent);
-    border-radius: 6px;
-    padding: 8px 10px;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(-4px);
-    transition: opacity 0.18s ease, transform 0.18s ease;
-    pointer-events: none;
-    margin-top: 4px;
-  }
-
-  .copy-feedback.show { opacity: 1; transform: translateY(0); }
-
-  .status-note { font-size: 11.5px; color: var(--ink-soft); margin-top: -6px; }
-
-  footer {
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 4px 28px 32px;
-    font-size: 11.5px;
-    color: #8fa0a3;
-  }
-
-  @media (max-width: 920px) {
-    main { grid-template-columns: 1fr; padding: 18px; gap: 18px; }
-    .output-col { position: static; }
-    header.app-header { padding: 16px 18px; flex-wrap: wrap; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    * { transition: none !important; }
+    --accent: var(--returned);
+    --accent-dark: var(--returned-dark);
+    --accent-soft: var(--returned-soft);
+    --focus: var(--returned-focus);
   }
 </style>
 </head>
@@ -361,253 +27,88 @@
 
 <main>
   <form id="returnedVisitsForm" autocomplete="off">
-
+    <!-- Step 01: Visit Details -->
     <section class="card">
-      <div class="eyebrow"><span class="num">01</span><h2>Details</h2></div>
-      <div class="field-grid">
-        <div class="field">
-          <label for="visitDate">Date</label>
-          <input type="date" id="visitDate" name="visitDate">
-        </div>
-        <div class="field">
-          <label for="staffName">Staff Name</label>
-          <input type="text" id="staffName" name="staffName" placeholder="Full name">
-        </div>
+      <div class="eyebrow">
+        <span class="num">01</span>
+        <h2>Visit Details</h2>
       </div>
-    </section>
-
-    <section class="card">
-      <div class="eyebrow"><span class="num">02</span><h2>Returned Visits Details</h2></div>
       <div class="field-grid">
-        <div class="field">
-          <label for="numVisits">Number of Visits Returned</label>
-          <input type="number" id="numVisits" name="numVisits" min="0" step="1" placeholder="e.g. 4">
+        <div class="field full">
+          <label for="visitDate">Date</label>
+          <input type="date" id="visitDate">
         </div>
         <div class="field full">
-          <label>Total Hours Returned</label>
+          <label for="staffName">Staff Name</label>
+          <input type="text" id="staffName" placeholder="e.g., John Smith">
+        </div>
+        <div class="field">
+          <label for="numVisits">Number of visits returned</label>
+          <input type="number" id="numVisits" min="0" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Total hours returned</label>
           <div class="hours-row">
-            <select id="hoursReturned" name="hoursReturned" aria-label="Hours">
-              <option value="">Hours…</option>
-              <option value="0">0 h</option>
-              <option value="1">1 h</option>
-              <option value="2">2 h</option>
-              <option value="3">3 h</option>
-              <option value="4">4 h</option>
-              <option value="5">5 h</option>
-              <option value="6">6 h</option>
-              <option value="7">7 h</option>
-              <option value="8">8 h</option>
-              <option value="9">9 h</option>
-              <option value="10">10 h</option>
-              <option value="11">11 h</option>
-              <option value="12">12 h</option>
-            </select>
-            <select id="minutesReturned" name="minutesReturned" aria-label="Minutes">
-              <option value="">Minutes…</option>
-              <option value="00">00 m</option>
-              <option value="15">15 m</option>
-              <option value="30">30 m</option>
-              <option value="45">45 m</option>
-            </select>
+            <input type="number" id="hoursReturned" min="0" placeholder="Hrs">
+            <input type="number" id="minutesReturned" min="0" max="59" placeholder="Mins">
           </div>
         </div>
-        <div class="field full">
-          <label for="keyword">Keyword / Reason</label>
-          <select id="keyword" name="keyword">
-            <option value="">Select…</option>
-            <option>Illness – self</option>
-            <option>Illness – family</option>
-            <option>Automotive issue</option>
-            <option>WCB/WSIB/Injury</option>
-            <option>Modified duties</option>
-            <option>Childcare</option>
-            <option>Scheduling error – availability</option>
-            <option>Scheduling error – distance</option>
-            <option>Scheduling error – overlapping</option>
-            <option>Education/Student</option>
-            <option>Notice not provided/client not accepted</option>
-            <option>Bereavement</option>
-            <option>Personal/Family emergency</option>
-            <option>No show</option>
-            <option>Appointment</option>
-            <option>Insufficient hours</option>
-            <option>Unapproved removal</option>
-            <option>Client-Specific Removal – Environmental Concern (Eg. Pets, Smoking, Bedbugs, etc.)</option>
-          </select>
-        </div>
-        <div class="field full">
-          <label for="clients">Client(s) <span class="hint">(first name and last initial; separate multiple with a comma)</span></label>
-          <input type="text" id="clients" name="clients" placeholder="e.g. Mary S., John D.">
-        </div>
-        <div class="field full">
-          <label for="description">Description <span class="hint">(client notified / voicemail left and key details)</span></label>
-          <textarea id="description" name="description" placeholder="Describe what happened, who was notified, and how…"></textarea>
-        </div>
       </div>
     </section>
 
+    <!-- Step 02: Reason & Description -->
+    <section class="card">
+      <div class="eyebrow">
+        <span class="num">02</span>
+        <h2>Reason</h2>
+      </div>
+      <div class="field-grid">
+        <div class="field full">
+          <label for="keyword">Keyword / Reason</label>
+          <input type="text" id="keyword" placeholder="e.g., Car trouble, Sick">
+        </div>
+        <div class="field full">
+          <label for="clients">Client(s) Affected</label>
+          <input type="text" id="clients" placeholder="List client names or IDs">
+        </div>
+        <div class="field full">
+          <label for="description">Description</label>
+          <textarea id="description" placeholder="Provide additional context..."></textarea>
+        </div>
+      </div>
+    </section>
   </form>
 
+  <!-- Output Engine -->
   <div class="output-col">
     <div class="output-panel">
-      <div class="eyebrow"><span class="num">OUT</span><h2>Generated Note & Message</h2></div>
-      
+      <div class="eyebrow">
+        <span class="num">OUT</span>
+        <h2>Generated Notes</h2>
+      </div>
+
       <div class="textarea-group">
-        <label>System Note</label>
-        <textarea id="noteOutput" readonly aria-label="Generated Returned Visits Book Off note"></textarea>
+        <label for="noteOutput">Procura Note</label>
+        <textarea id="noteOutput" readonly></textarea>
       </div>
 
-      <div class="textarea-group" style="margin-top: 8px;">
-        <label>Teams Message</label>
-        <textarea id="teamsOutput" readonly aria-label="Generated Teams Message"></textarea>
+      <div class="textarea-group">
+        <label for="teamsOutput">Teams Message</label>
+        <textarea id="teamsOutput" readonly></textarea>
       </div>
 
-      <div class="btn-row" style="margin-top: 8px;">
-        <button type="button" id="copyNoteBtn" class="btn-primary">Copy Note</button>
-        <button type="button" id="copyTeamsBtn" class="btn-secondary">Copy Teams Msg</button>
+      <div class="btn-row">
+        <button type="button" class="btn-primary" id="copyNoteBtn">Copy Note</button>
+        <button type="button" class="btn-secondary" id="copyTeamsBtn">Copy Teams MSG</button>
       </div>
-      
-      <div id="copyFeedback" class="copy-feedback" role="status" aria-live="polite">Copied to clipboard!</div>
-      <div class="status-note">Updates live as you fill in the form. Blank fields show as "—".</div>
+      <div id="copyFeedback" class="copy-feedback">Copied to clipboard!</div>
     </div>
   </div>
 </main>
 
 <footer>CBI Returned Visits Book Off Template Builder — data stays in your browser; nothing is transmitted or stored.</footer>
 
-<script>
-(function () {
-  "use strict";
-
-  const form = document.getElementById("returnedVisitsForm");
-  const noteOutput = document.getElementById("noteOutput");
-  const teamsOutput = document.getElementById("teamsOutput");
-  const copyNoteBtn = document.getElementById("copyNoteBtn");
-  const copyTeamsBtn = document.getElementById("copyTeamsBtn");
-  const copyFeedback = document.getElementById("copyFeedback");
-
-  const dash = "—";
-
-  function val(id) {
-    const el = document.getElementById(id);
-    if (!el) return "";
-    return el.value.trim();
-  }
-
-  function orDash(s) {
-    return s && s.length ? s : dash;
-  }
-
-  function formatDate(raw) {
-    if (!raw) return dash;
-    const parts = raw.split("-");
-    if (parts.length !== 3) return raw;
-    const [y, m, d] = parts;
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const mi = parseInt(m, 10) - 1;
-    if (mi < 0 || mi > 11) return raw;
-    return `${months[mi]} ${parseInt(d, 10)}, ${y}`;
-  }
-
-  function formatHours(h, m) {
-    if (!h && !m) return dash;
-    const hh = h || "0";
-    const mm = m || "00";
-    return `${hh}h ${mm}m`;
-  }
-  
-  function isToday(rawDateString) {
-    if (!rawDateString) return false;
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    const todayStr = `${yyyy}-${mm}-${dd}`;
-    return rawDateString === todayStr;
-  }
-
-  function generateContent() {
-    const rawDate = val("visitDate");
-    const date = formatDate(rawDate);
-    const staffName = orDash(val("staffName"));
-    const numVisits = orDash(val("numVisits"));
-    const hoursReturned = formatHours(val("hoursReturned"), val("minutesReturned"));
-    const keyword = orDash(val("keyword"));
-    const clients = orDash(val("clients"));
-    const description = orDash(val("description"));
-
-    // 1. Generate System Note
-    const noteLines = [
-      "Title - Returned Visits Book Off",
-      `Date: ${date} | Staff Name: ${staffName}`,
-      `Number of visits returned: ${numVisits}`,
-      `Total hours returned: ${hoursReturned}`,
-      `Keyword/Reason: ${keyword}`,
-      `Client(s): ${clients}`,
-      `Description: ${description}`
-    ];
-    noteOutput.value = noteLines.join("\n");
-
-    // 2. Generate Teams Message
-    const teamsDateText = isToday(rawDate) ? "today" : (date !== dash ? date : "[date]");
-    const tStaff = staffName !== dash ? staffName : "[Name of staff]";
-    const tClient = clients !== dash ? clients : "[client name]";
-    const tKeyword = keyword !== dash ? keyword : "[keyword]";
-    const tVisits = numVisits !== dash ? `${numVisits}` : "[number of]";
-
-    teamsOutput.value = `Staff ${tStaff} returned visit for ${tClient} ${teamsDateText}, ${tKeyword}. ${tVisits} back to planner.`;
-  }
-
-  function copyText(targetElement) {
-    if (!targetElement.value) generateContent();
-    const text = targetElement.value;
-
-    function showFeedback() {
-      copyFeedback.classList.add("show");
-      clearTimeout(showFeedback._t);
-      showFeedback._t = setTimeout(() => {
-        copyFeedback.classList.remove("show");
-      }, 2200);
-    }
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(showFeedback).catch(() => {
-        fallbackCopy(targetElement, showFeedback);
-      });
-    } else {
-      fallbackCopy(targetElement, showFeedback);
-    }
-  }
-
-  function fallbackCopy(targetElement, cb) {
-    targetElement.removeAttribute("readonly");
-    targetElement.focus();
-    targetElement.select();
-    try {
-      document.execCommand("copy");
-      cb();
-    } catch (e) {
-      /* no-op */
-    } finally {
-      targetElement.setAttribute("readonly", "true");
-    }
-  }
-
-  const dateInput = document.getElementById("visitDate");
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
-  dateInput.value = `${yyyy}-${mm}-${dd}`;
-
-  form.addEventListener("input", generateContent);
-  form.addEventListener("change", generateContent);
-  copyNoteBtn.addEventListener("click", () => copyText(noteOutput));
-  copyTeamsBtn.addEventListener("click", () => copyText(teamsOutput));
-
-  generateContent();
-})();
-</script>
-
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/templates.js"></script>
 </body>
 </html>
