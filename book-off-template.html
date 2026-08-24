@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CBI Returned Visits Book Off Template</title>
+<title>CBI Book Off Template Builder</title>
 <link rel="stylesheet" href="assets/css/global.css">
 <style>
   :root {
-    --accent: var(--returned);
-    --accent-dark: var(--returned-dark);
-    --accent-soft: var(--returned-soft);
-    --focus: var(--returned-focus);
+    --accent: var(--bookoff);
+    --accent-dark: var(--bookoff-dark);
+    --accent-soft: var(--bookoff-soft);
+    --focus: var(--bookoff-focus);
   }
 </style>
 </head>
@@ -19,14 +19,14 @@
 <header class="app-header">
   <span class="mark" aria-hidden="true"></span>
   <div>
-    <h1>Returned Visits Book Off</h1>
-    <div class="sub">Visits returned due to a staff book off</div>
+    <h1>Book Off Template Builder</h1>
+    <div class="sub">Staff Book Off — Partial Day / Full Day</div>
   </div>
   <a class="back" href="index.html">&larr; All templates</a>
 </header>
 
 <main>
-  <form id="returnedVisitsForm" autocomplete="off">
+  <form id="bookOffForm" autocomplete="off">
     <!-- Step 01: Visit Details -->
     <section class="card">
       <div class="eyebrow">
@@ -34,16 +34,23 @@
         <h2>Visit Details</h2>
       </div>
       <div class="field-grid">
-        <div class="field full">
+        <div class="field">
           <label for="visitDate">Date</label>
           <input type="date" id="visitDate">
         </div>
+        <div class="field">
+          <label for="bookOffType">Book Off Type</label>
+          <select id="bookOffType">
+            <option value="full day">Full Day</option>
+            <option value="partial day">Partial Day</option>
+          </select>
+        </div>
         <div class="field full">
           <label for="staffName">Staff Name</label>
-          <input type="text" id="staffName" placeholder="e.g., John Smith">
+          <input type="text" id="staffName" placeholder="e.g., Jane Doe">
         </div>
         <div class="field">
-          <label for="numVisits">Number of visits returned</label>
+          <label for="numVisits">Number of visits</label>
           <input type="number" id="numVisits" min="0" placeholder="0">
         </div>
         <div class="field">
@@ -65,15 +72,31 @@
       <div class="field-grid">
         <div class="field full">
           <label for="keyword">Keyword / Reason</label>
-          <input type="text" id="keyword" placeholder="e.g., Car trouble, Sick">
-        </div>
-        <div class="field full">
-          <label for="clients">Client(s) Affected</label>
-          <input type="text" id="clients" placeholder="List client names or IDs">
+          <select id="keyword">
+            <option value="">[Select Keyword]</option>
+            <option value="Illness – self">Illness – self</option>
+            <option value="Illness – family">Illness – family</option>
+            <option value="Automotive issue">Automotive issue</option>
+            <option value="WCB/WSIB/Injury">WCB/WSIB/Injury</option>
+            <option value="Modified duties">Modified duties</option>
+            <option value="Childcare">Childcare</option>
+            <option value="Scheduling error – availability">Scheduling error – availability</option>
+            <option value="Scheduling error – distance">Scheduling error – distance</option>
+            <option value="Scheduling error – overlapping">Scheduling error – overlapping</option>
+            <option value="Education/Student">Education/Student</option>
+            <option value="Notice not provided/client not accepted">Notice not provided/client not accepted</option>
+            <option value="Bereavement">Bereavement</option>
+            <option value="Personal/Family emergency">Personal/Family emergency</option>
+            <option value="No show">No show</option>
+            <option value="Appointment">Appointment</option>
+            <option value="Insufficient hours">Insufficient hours</option>
+            <option value="Unapproved removal">Unapproved removal</option>
+            <option value="Client-Specific Removal – Environmental Concern">Client-Specific Removal – Environmental Concern</option>
+          </select>
         </div>
         <div class="field full">
           <label for="description">Description</label>
-          <textarea id="description" placeholder="Provide additional context..."></textarea>
+          <textarea id="description" placeholder="Briefly describe the situation (e.g., has a fever and sore throat since last night)..."></textarea>
         </div>
       </div>
     </section>
@@ -106,8 +129,7 @@
   </div>
 </main>
 
-<footer>CBI Returned Visits Book Off Template Builder — data stays in your browser; nothing is transmitted or stored.</footer>
-
+<footer>CBI Book Off Template Builder — data stays in your browser; nothing is transmitted or stored.</footer>
 <script src="assets/js/utils.js"></script>
 <script src="assets/js/templates.js"></script>
 </body>

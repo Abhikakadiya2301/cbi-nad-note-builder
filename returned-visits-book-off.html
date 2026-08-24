@@ -65,7 +65,27 @@
       <div class="field-grid">
         <div class="field full">
           <label for="keyword">Keyword / Reason</label>
-          <input type="text" id="keyword" placeholder="e.g., Car trouble, Sick">
+          <select id="keyword">
+            <option value="">[Select Keyword]</option>
+            <option value="Illness – self">Illness – self</option>
+            <option value="Illness – family">Illness – family</option>
+            <option value="Automotive issue">Automotive issue</option>
+            <option value="WCB/WSIB/Injury">WCB/WSIB/Injury</option>
+            <option value="Modified duties">Modified duties</option>
+            <option value="Childcare">Childcare</option>
+            <option value="Scheduling error – availability">Scheduling error – availability</option>
+            <option value="Scheduling error – distance">Scheduling error – distance</option>
+            <option value="Scheduling error – overlapping">Scheduling error – overlapping</option>
+            <option value="Education/Student">Education/Student</option>
+            <option value="Notice not provided/client not accepted">Notice not provided/client not accepted</option>
+            <option value="Bereavement">Bereavement</option>
+            <option value="Personal/Family emergency">Personal/Family emergency</option>
+            <option value="No show">No show</option>
+            <option value="Appointment">Appointment</option>
+            <option value="Insufficient hours">Insufficient hours</option>
+            <option value="Unapproved removal">Unapproved removal</option>
+            <option value="Client-Specific Removal – Environmental Concern">Client-Specific Removal – Environmental Concern</option>
+          </select>
         </div>
         <div class="field full">
           <label for="clients">Client(s) Affected</label>
@@ -73,7 +93,7 @@
         </div>
         <div class="field full">
           <label for="description">Description</label>
-          <textarea id="description" placeholder="Provide additional context..."></textarea>
+          <textarea id="description" placeholder="Provide additional context (e.g., client has dogs, staff has severe allergy)..."></textarea>
         </div>
       </div>
     </section>
@@ -107,7 +127,6 @@
 </main>
 
 <footer>CBI Returned Visits Book Off Template Builder — data stays in your browser; nothing is transmitted or stored.</footer>
-
 <script src="assets/js/utils.js"></script>
 <script src="assets/js/templates.js"></script>
 </body>
