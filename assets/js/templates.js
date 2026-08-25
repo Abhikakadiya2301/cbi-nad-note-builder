@@ -109,7 +109,11 @@ function initBookOff() {
   function generate() {
     const rawDate = val("visitDate");
     const date = formatDate(rawDate);
-    const type = val("bookOffType");
+
+    // Capture and capitalize the dropdown selection for the Note Title
+    const rawType = val("bookOffType");
+    const typeTitle = rawType === "full day" ? "Full Day" : (rawType === "partial day" ? "Partial Day" : "Partial/Full Day");
+
     const staffName = orDash(val("staffName"));
     const numVisits = orDash(val("numVisits"));
     const hoursReturned = formatHours(val("hoursReturned"), val("minutesReturned"));
@@ -117,7 +121,7 @@ function initBookOff() {
     const description = orDash(val("description"));
 
     noteOut.value = [
-      "Title - Staff Book Off (Partial Day/Full Day)",
+      `Title - Staff Book Off (${typeTitle})`,
       `Date: ${date} | Staff Name: ${staffName}`,
       `Number of visits: ${numVisits}`,
       `Total hours returned: ${hoursReturned}`,
@@ -127,7 +131,7 @@ function initBookOff() {
 
     const tDate = isToday(rawDate) ? "today" : (date !== dash ? date : "[date]");
     const tStaff = staffName !== dash ? staffName : "[Staff name]";
-    const tType = type || "[full day/partial day]";
+    const tType = rawType || "[full day/partial day]";
     const tKeyword = keyword !== dash ? keyword : "[keyword]";
     const tVisits = numVisits !== dash ? `${numVisits} visit(s)` : "[No of] visits";
 
