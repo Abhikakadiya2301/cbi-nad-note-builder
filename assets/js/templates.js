@@ -157,28 +157,39 @@ function initNAD() {
   function formatSelect(val) { return val ? val : "[Select]"; }
   function formatText(val, placeholder) { return val ? val : placeholder; }
 
+  // 1. The Localized Chronometer
+  function autoFillTime() {
+    const timeInput = document.getElementById("visitTime");
+    if (timeInput && !timeInput.value) {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      // Injects the exact current local machine time (e.g., 14:06)
+      timeInput.value = `${hh}:${mm}`;
+    }
+  }
+
   function generate() {
-    // 1. Visit Details
+    // 2. Data Extraction
     const rawDate = val("visitDate");
     const date = formatDate(rawDate) !== dash ? formatDate(rawDate) : "[Date]";
-    const tStart = val("timeStart") || "[Start]";
-    const tEnd = val("timeEnd") || "[End]";
+
+    // Captures either the auto-filled time, or whatever the user types over it
+    const visitTime = formatText(val("visitTime"), "[Start–End]");
+
     const priority = formatSelect(val("priority"));
     const staffName = formatText(val("staffName"), "[Staff Name]");
 
-    // 2. NAD Steps
     const sReported = formatSelect(val("staffReported"));
     const sAddress = formatSelect(val("addressVerified"));
     const sEntry = formatSelect(val("entryInstructions"));
     const sWaited = formatSelect(val("waited15"));
     const nadDesc = formatText(val("nadDesc"), "[Description]");
 
-    // 3. Client Contact
     const cCalled = formatSelect(val("clientCalled"));
     const cOutcome = formatSelect(val("clientOutcome"));
     const clientDesc = formatText(val("clientDesc"), "[Description]");
 
-    // 4. Contacts Called
     const c1Name = formatText(val("c1Name"), "[Name/Relationship]");
     const c1Outcome = formatSelect(val("c1Outcome"));
     const c1Desc = formatText(val("c1Desc"), "[Description]");
@@ -187,15 +198,14 @@ function initNAD() {
     const c2Outcome = formatSelect(val("c2Outcome"));
     const c2Desc = formatText(val("c2Desc"), "[Description]");
 
-    // 5. ALA Notification
     const alaNotified = formatSelect(val("alaNotified"));
     const alaOffice = formatText(val("alaOffice"), "[Office/Site Name / N/A]");
     const alaMethod = formatSelect(val("alaMethod"));
 
-    // Compile Output Note
+    // 3. Compile Output Note
     noteOut.value = [
       "Title - NAD",
-      `Visit Details: Date: ${date} | Time: ${tStart}–${tEnd} | Priority: ${priority}`,
+      `Visit Details: Date: ${date} | Time: ${visitTime} | Priority: ${priority}`,
       `Staff Name: ${staffName}`,
       "",
       "NAD Steps Completed:",
@@ -217,13 +227,15 @@ function initNAD() {
       `Method: ${alaMethod}`
     ].join("\n");
 
-    // Teams Message (Maintained for operational fluidity)
+    // 4. Compile Teams Message
     const tDate = isToday(rawDate) ? "today" : date;
-    const tTime = tStart !== "[Start]" ? tStart : "[time]";
+    const tTime = visitTime !== "[Start–End]" ? visitTime : "[time]";
     teamsOut.value = `NAD recorded at ${tTime} ${tDate}. Staff ${staffName} reported NAD. Priority: ${priority}. ALA notified: ${alaNotified}.`;
   }
 
+  // 5. The Initialization Sequence
   setTodayDate("visitDate");
+  autoFillTime(); // Propels the current time into the text field on load
   form.addEventListener("input", generate);
   document.getElementById("copyNoteBtn").addEventListener("click", () => copyText(noteOut, feedback, generate));
   document.getElementById("copyTeamsBtn").addEventListener("click", () => copyText(teamsOut, feedback, generate));
